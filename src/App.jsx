@@ -1,34 +1,33 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import useCountry from './useCountry'
+import CountrySelect from './component/CountrySelect'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { options } = useCountry()
+  const[selected,setSelected]=useState(null)
+
+  function onChange(option) {
+    console.log("Country Selected", option)
+    setSelected(option)
+  }
+
+  
+  function handleSubmit(e){
+    e.preventDefault( )
+    alert('Country:'+selected.country+'State:'+ selected.state)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="App">
+      <form onSubmit={handleSubmit}>
+      {options?.length !== 0 ? <CountrySelect options={options} onChange={onChange} /> : "Loading"}
+      
+      <div className="button">
+        <button type='submit'>Submit</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      </form>
+    </div>
   )
 }
 
