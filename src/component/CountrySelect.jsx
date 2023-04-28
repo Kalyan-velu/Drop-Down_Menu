@@ -1,12 +1,10 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from 'react';
-import CountrySelectState from './CountrySelectState';
+
 
 function CustomSelect({ options, onChange }) {
    const [isOpen, setIsOpen] = useState(false);
    const [selectedOption, setSelectedOption] = useState(null);
-   const [showSelectState, setShowSelectState] = useState(false)
-   const [state, setState] = useState('')
    const optionsListRef = useRef(null);
 
    useEffect(() => {
@@ -24,42 +22,32 @@ function CustomSelect({ options, onChange }) {
    };
 
    const handleSelectOption = (option) => {
-      setSelectedOption(option);
+      if(option.length<=0){
+         setSelectedOption("Nothing to Select from")
+      }
+      setSelectedOption(option.name);
       setIsOpen(!isOpen);
-      setShowSelectState(true)
+      onChange(option)
    };
-
-   function onChangeState(option) {
-      console.log("Country Selected", option)
-      setState(option)
-      setShowSelectState(true)
-      
-      onChange({
-         country: option,
-         state
-      })
-   }
-
 
    return (
       <>
-         <div className={`custom-select ${isOpen ? 'open' : ''}`}>
-            <div className="select-trigger" onClick={() => setIsOpen(!isOpen)}>
-               {selectedOption ? selectedOption : 'Select a country'}
+         <div tabIndex={"0"} role='listbox' aria-haspopup="listbox" aria-expanded={isOpen} className={`custom-select ${isOpen ? 'open' : ''}`}>
+            <div role='button' tabIndex={"1"} aria-haspopup="listbox" aria-expanded={isOpen} className="select-trigger" onClick={() => setIsOpen(!isOpen)}>
+               {selectedOption ? selectedOption : 'Select a option'}
             </div>
-            {isOpen ? <ul className="options" ref={optionsListRef}>
-               {options?.map((option) => (
-                  <li key={option.name.common} className="option"
-                     onClick={() => {
-                        handleSelectOption(option.name.common)
-                     }}>
-                     {option.name.common}
-                  </li>
-               ))}
-            </ul> : null}
+            {isOpen ?
+               <ul tabIndex={"2"} role='list' className="options" ref={optionsListRef}>
+                  {options?.length > 0 ? options?.map((option, index) => (
+                     <li tabIndex={index + 3} key={option?.name || index} aria-selected={selectedOption === option?.name} className="option"
+                        onClick={() => {
+                           handleSelectOption(option)
+                        }}>
+                        {option?.name || option}
+                     </li>
+                  )) : <li onClick={()=>handleSelectOption(options)} className='option'>No options</li>}
+               </ul> : null}
          </div>
-
-         {showSelectState ? <CountrySelectState options={options} onChange={onChangeState} /> : null}
       </>
    );
 }
