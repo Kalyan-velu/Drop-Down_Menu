@@ -33,7 +33,7 @@ function App() {
         <Route path='/' element={
           <form onSubmit={handleSubmit}>
             {options?.length !== 0 ? <CountrySelect options={Country.getAllCountries()} onChange={onChange} /> : "Loading"}
-            {selectedCountry?.name !=="" ? <CountrySelect options={State.getStatesOfCountry(selectedCountry?.isoCode)} onChange={onChangeState} /> : null}
+            {selectedCountry ? <CountrySelect options={State.getStatesOfCountry(selectedCountry?.isoCode)} onChange={onChangeState} /> : null}
             <div className="button">
               <button type='submit'>Submit</button>
             </div>
