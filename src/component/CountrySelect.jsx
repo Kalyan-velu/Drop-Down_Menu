@@ -22,30 +22,33 @@ function CustomSelect({ options, onChange }) {
    };
 
    const handleSelectOption = (option) => {
-      if(option.length<=0){
-         setSelectedOption("Nothing to Select from")
+      if (option.length <= 0) {
+         setSelectedOption()
+      } else {
+         setSelectedOption(option.name);
       }
-      setSelectedOption(option.name);
       setIsOpen(!isOpen);
       onChange(option)
+
    };
 
    return (
       <>
          <div tabIndex={"0"} role='listbox' aria-haspopup="listbox" aria-expanded={isOpen} className={`custom-select ${isOpen ? 'open' : ''}`}>
             <div role='button' tabIndex={"1"} aria-haspopup="listbox" aria-expanded={isOpen} className="select-trigger" onClick={() => setIsOpen(!isOpen)}>
-               {selectedOption ? selectedOption : 'Select a option'}
+               {(options?.length !== 0 && selectedOption===null) ?  "Select a option":selectedOption}
+               {options?.length === 0 && 'No Data'}
             </div>
             {isOpen ?
                <ul tabIndex={"2"} role='list' className="options" ref={optionsListRef}>
-                  {options?.length > 0 ? options?.map((option, index) => (
+                  {options?.map((option, index) => (
                      <li tabIndex={index + 3} key={option?.name || index} aria-selected={selectedOption === option?.name} className="option"
                         onClick={() => {
                            handleSelectOption(option)
                         }}>
-                        {option?.name || option}
+                        {option?.name || Object}
                      </li>
-                  )) : <li onClick={()=>handleSelectOption(options)} className='option'>No options</li>}
+                  ))}
                </ul> : null}
          </div>
       </>
